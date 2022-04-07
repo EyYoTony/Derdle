@@ -3,10 +3,27 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { ThemeProvider, createMuiTheme } from '@mui/material/styles';
+import { SnackbarProvider } from 'notistack';
+//import PageTheme from './pageTheme.js'
+
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      light: "#BB86FC",
+      main: "#1F1A24",
+      dark: "#1F1A24",
+    },
+  }
+})
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <SnackbarProvider maxSnack={3}>
+        <App />
+      </SnackbarProvider>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -13,6 +13,7 @@ const theme = createMuiTheme({
       light: "#BB86FC",
       main: "#1F1A24",
       dark: "#1F1A24",
+      default: "#686868",
     },
   }
 })

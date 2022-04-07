@@ -10,7 +10,7 @@ const GameSquare = (props) => {
     ? "#00b520"
     : (result == "appears")
     ? "#ef9333"
-    : "#686868"
+    : "#242526"
 
   return(
     <Box sx={{

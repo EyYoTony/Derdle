@@ -13,6 +13,7 @@ import GameRow from './components/gameRow.js'
 //MAKE KEYBOARD REFLECT CURRENT PLAYER INPUT INFO (use state)
 //ONLY ALLOW WORDS IN WORDLIST back one directory
 //change button typeface to fantasy and increase font size
+// last thing - save attempts/state to cookies
 
 export default function App() {
 
@@ -20,8 +21,41 @@ export default function App() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   //using hook to control state of input
-  // I am probably doing a bad practice of changing the array instead of creating a new one with setAns at teh current moment
+  // I am probably doing a bad practice of changing the array instead of creating a new one with setAns at the current moment
   const [ans, setAns] = useState(["", "", "", "", "", ""])
+  //keyboard state
+  const [kbd, setKbd] = useState({
+    a: {bgc: "#686868", status: "none"},
+    b: {bgc: "#686868", status: "none"},
+    c: {bgc: "#686868", status: "none"},
+    d: {bgc: "#686868", status: "none"},
+    e: {bgc: "#686868", status: "none"},
+    f: {bgc: "#686868", status: "none"},
+    g: {bgc: "#686868", status: "none"},
+    h: {bgc: "#686868", status: "none"},
+    i: {bgc: "#686868", status: "none"},
+    j: {bgc: "#686868", status: "none"},
+    k: {bgc: "#686868", status: "none"},
+    l: {bgc: "#686868", status: "none"},
+    m: {bgc: "#686868", status: "none"},
+    n: {bgc: "#686868", status: "none"},
+    o: {bgc: "#686868", status: "none"},
+    p: {bgc: "#686868", status: "none"},
+    q: {bgc: "#686868", status: "none"},
+    r: {bgc: "#686868", status: "none"},
+    s: {bgc: "#686868", status: "none"},
+    t: {bgc: "#686868", status: "none"},
+    u: {bgc: "#686868", status: "none"},
+    v: {bgc: "#686868", status: "none"},
+    w: {bgc: "#686868", status: "none"},
+    x: {bgc: "#686868", status: "none"},
+    y: {bgc: "#686868", status: "none"},
+    z: {bgc: "#686868", status: "none"},
+    enter: {bgc: "#686868", status: "none"},
+    back: {bgc: "#686868", status: "none"},
+  })
+  //^ this is the proper way to do state as object / do this instead of array like I did with input
+
   //The inputState will always reflect the current user guess
   const [inputState, setInput] = useState("")
   //counter to know what line to edit
@@ -31,14 +65,46 @@ export default function App() {
   //const currentDate = new Date().getTime()
   //console.log(currentDate)
 
+  // setKbd({
+  //   ...kbd,
+  //   q: {bgc: "#ef9333", status: "none"}
+  // })
+
   //ALLOWED KEYS FOR INPUT - A-Z lower and uppercasse
   const ALLOWED_KEYS = ['a', 'A', 'b', 'B', 'c', 'C', 'd', 'D', 'e', 'E', 'f', 'F', 'g', 'G', 'h', 'H', 'i', 'I', 'j', 'J', 'k', 'K', 'l', 'L', 'm', 'M', 'n', 'N', 'o', 'O', 'p', 'P', 'q', 'Q', 'r', 'R', 's', 'S', 't', 'T', 'u', 'U', 'v', 'V', 'w', 'W', 'x', 'X', 'y', 'Y', 'z', 'Z']
+  const dailyWord = "GHOST"
 
   var addLettter = (letter) => {
     if(inputState.length < 5){
       ans[counter] = (inputState + letter)
       setInput(inputState + letter)
     }
+  }
+
+  const updateKeyboard = (inWord, dw) =>{
+    var updatedObj = kbd
+    for(var i=0; i<inWord.length; i++){
+      const myChar = inWord.toLowerCase().charAt(i)
+      //don't update keyboard characters unless no status or appears
+      if(kbd[myChar].status == "none"){
+        if(!dw.toLowerCase().includes(myChar)){
+          updatedObj = {...updatedObj, [myChar]: {bgc: "#242526", status: "missing"}}
+        }
+        else if(dw.toLowerCase().charAt(i) == myChar){
+          updatedObj = {...updatedObj, [myChar]: {bgc: "#00b520", status: "correct"}}
+        }
+        else if(dw.toLowerCase().includes(myChar)){
+          updatedObj = {...updatedObj, [myChar]: {bgc: "#ef9333", status: "appears"}}
+        }
+      }
+      else if(kbd[myChar].status == "appears"){
+        if(dw.toLowerCase().charAt(i) == myChar){
+          updatedObj = {...updatedObj, [myChar]: {bgc: "#00b520", status: "correct"}}
+        }
+      }
+    }
+    //can only update the object all at once, tried to do this one key at a time and it only updated last char in inWord
+    setKbd(updatedObj)
   }
 
   //handle keypress
@@ -76,6 +142,9 @@ export default function App() {
               });
             }
             else if (inputState.length == 5){
+              //This is submission - row results are handled in gameRow.js based on counter
+              //handle keyboard state on submit
+              updateKeyboard(inputState, dailyWord)
               setCounter(counter+1)
               setInput("")
             }
@@ -120,77 +189,45 @@ export default function App() {
     <div className="main">
       <Header />
       <div className="game">
-          <GameRow input={ans[0]} isSubmitted={counter > 0} />
-          <GameRow input={ans[1]} isSubmitted={counter > 1} />
-          <GameRow input={ans[2]} isSubmitted={counter > 2} />
-          <GameRow input={ans[3]} isSubmitted={counter > 3} />
-          <GameRow input={ans[4]} isSubmitted={counter > 4} />
-          <GameRow input={ans[5]} isSubmitted={counter > 5} />
+          <GameRow input={ans[0]} isSubmitted={counter > 0} dailyWord={dailyWord}/>
+          <GameRow input={ans[1]} isSubmitted={counter > 1} dailyWord={dailyWord}/>
+          <GameRow input={ans[2]} isSubmitted={counter > 2} dailyWord={dailyWord}/>
+          <GameRow input={ans[3]} isSubmitted={counter > 3} dailyWord={dailyWord}/>
+          <GameRow input={ans[4]} isSubmitted={counter > 4} dailyWord={dailyWord}/>
+          <GameRow input={ans[5]} isSubmitted={counter > 5} dailyWord={dailyWord}/>
       </div>
       <Grid container paddingTop="100px" spacing={1} direction="column" justifyContent="space-between" alignItems="center">
         <Grid item>
           <Grid container spacing={0.5} direction="row" justifyContent="center" alignItems="flex-end">
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("Q")}> Q </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.q.bgc}} onClick={() => addLettter("Q")}> Q </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("W")}> W </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.w.bgc}} onClick={() => addLettter("W")}> W </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("E")}> E </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.e.bgc}} onClick={() => addLettter("E")}> E </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("R")}> R </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.r.bgc}} onClick={() => addLettter("R")}> R </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("T")}> T </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.t.bgc}} onClick={() => addLettter("T")}> T </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("Y")}> Y </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.y.bgc}} onClick={() => addLettter("Y")}> Y </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("U")}> U </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.u.bgc}} onClick={() => addLettter("U")}> U </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("I")}> I </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.i.bgc}} onClick={() => addLettter("I")}> I </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("O")}> O </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.o.bgc}} onClick={() => addLettter("O")}> O </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("P")}> P </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Grid item>
-          <Grid container spacing={0.5} direction="row" justifyContent="center" alignItems="flex-end">
-            <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("A")}> A </Button>
-            </Grid>
-            <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("S")}> S </Button>
-            </Grid>
-            <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("D")}> D </Button>
-            </Grid>
-            <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("F")}> F </Button>
-            </Grid>
-            <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("G")}> G </Button>
-            </Grid>
-            <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("H")}> H </Button>
-            </Grid>
-            <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("J")}> J </Button>
-            </Grid>
-            <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("K")}> K </Button>
-            </Grid>
-            <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("L")}> L </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.p.bgc}} onClick={() => addLettter("P")}> P </Button>
             </Grid>
           </Grid>
         </Grid>
@@ -198,33 +235,65 @@ export default function App() {
         <Grid item>
           <Grid container spacing={0.5} direction="row" justifyContent="center" alignItems="flex-end">
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => {console.log("back")}}>
+              <Button variant="contained" sx={{backgroundColor: kbd.a.bgc}} onClick={() => addLettter("A")}> A </Button>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" sx={{backgroundColor: kbd.s.bgc}} onClick={() => addLettter("S")}> S </Button>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" sx={{backgroundColor: kbd.d.bgc}} onClick={() => addLettter("D")}> D </Button>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" sx={{backgroundColor: kbd.f.bgc}} onClick={() => addLettter("F")}> F </Button>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" sx={{backgroundColor: kbd.g.bgc}} onClick={() => addLettter("G")}> G </Button>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" sx={{backgroundColor: kbd.h.bgc}} onClick={() => addLettter("H")}> H </Button>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" sx={{backgroundColor: kbd.j.bgc}} onClick={() => addLettter("J")}> J </Button>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" sx={{backgroundColor: kbd.k.bgc}} onClick={() => addLettter("K")}> K </Button>
+            </Grid>
+            <Grid item>
+              <Button variant="contained" sx={{backgroundColor: kbd.l.bgc}} onClick={() => addLettter("L")}> L </Button>
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid item>
+          <Grid container spacing={0.5} direction="row" justifyContent="center" alignItems="flex-end">
+            <Grid item>
+              <Button variant="contained" sx={{backgroundColor: kbd.enter.bgc}} onClick={() => {console.log("enter")}}>
                  Enter
               </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("Z")}> Z </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.z.bgc}} onClick={() => addLettter("Z")}> Z </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("X")}> X </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.x.bgc}} onClick={() => addLettter("X")}> X </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("C")}> C </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.c.bgc}} onClick={() => addLettter("C")}> C </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("V")}> V </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.v.bgc}} onClick={() => addLettter("V")}> V </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("B")}> B </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.b.bgc}} onClick={() => addLettter("B")}> B </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("N")}> N </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.n.bgc}} onClick={() => addLettter("N")}> N </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => addLettter("M")}> M </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.m.bgc}} onClick={() => addLettter("M")}> M </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" color="success" onClick={() => {console.log("back")}} startIcon={<KeyboardBackspaceIcon />}> Back </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.back.bgc}} onClick={() => {console.log("back")}} startIcon={<KeyboardBackspaceIcon />}> Back </Button>
             </Grid>
           </Grid>
         </Grid>

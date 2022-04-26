@@ -80,7 +80,7 @@ export default function App() {
   const dailyWord = "GHOST"
 
   var addLettter = (letter) => {
-    if(inputState.length < 5){
+    if(inputState.length < 5 && !isWin){
       ans[counter] = (inputState + letter)
       setInput(inputState + letter)
     }
@@ -106,6 +106,37 @@ export default function App() {
         }
       }
     });
+  }
+
+  //Logic for handling enter press - can open snackbar and dialog modals
+  var handleEnter = () => {
+    if (inputState.length < 5 && counter <= 5){
+      createSnackbar('Word Not Long Enough')
+    }
+    else if (inputState.length == 5){
+      if(allowedWordArr.includes(inputState)){
+        //This is submission - row results are handled in gameRow.js based on counter
+        //handle keyboard state on submit
+        if(inputState.toUpperCase() == dailyWord.toUpperCase()){
+          setIsWin(true)
+        }
+        updateKeyboard(inputState, dailyWord)
+        setCounter(counter+1)
+        setInput("")
+      }
+      else{
+        createSnackbar("That's not a word")
+      }
+    }
+    else {
+      createSnackbar("open modal")
+    }
+  }
+
+  //logic for backspace press - remove from list of words and current Input
+  var handleBackspace = () => {
+    ans[counter] = ans[counter].substring(0, ans[counter].length-1)
+    setInput(inputState.substring(0, inputState.length-1))
   }
 
   const updateKeyboard = (inWord, dw) =>{
@@ -141,30 +172,13 @@ export default function App() {
         e.preventDefault();
         if(!e.repeat){
           if(e.code == "Backspace"){
-            ans[counter] = ans[counter].substring(0, ans[counter].length-1)
-            setInput(inputState.substring(0, inputState.length-1))
+            handleBackspace()
           }
           else if(e.code == "Enter"){
-            if (inputState.length < 5 && counter <= 5){
-              console.log(counter)
-              createSnackbar('Word Not Long Enough')
-            }
-            else if (inputState.length == 5){
-              if(allowedWordArr.includes(inputState)){
-                //This is submission - row results are handled in gameRow.js based on counter
-                //handle keyboard state on submit
-                if(inputState == dailyWord)
-                  setIsWin(true)
-                updateKeyboard(inputState, dailyWord)
-                setCounter(counter+1)
-                setInput("")
-              }
-              else{
-                createSnackbar("That's not a word")
-              }
+            if(!isWin){
+              handleEnter()
             }
             else {
-              //use this as a exmple for custom snackbar popups
               createSnackbar("open modal")
             }
 
@@ -266,7 +280,7 @@ export default function App() {
         <Grid item>
           <Grid container spacing={0.5} direction="row" justifyContent="center" alignItems="flex-end">
             <Grid item>
-              <Button variant="contained" sx={{backgroundColor: kbd.enter.bgc}} onClick={() => {console.log("enter")}}>
+              <Button variant="contained" sx={{backgroundColor: kbd.enter.bgc}} onClick={handleEnter}>
                  Enter
               </Button>
             </Grid>
@@ -292,7 +306,7 @@ export default function App() {
               <Button variant="contained" sx={{backgroundColor: kbd.m.bgc}} onClick={() => addLettter("M")}> M </Button>
             </Grid>
             <Grid item>
-              <Button variant="contained" sx={{backgroundColor: kbd.back.bgc}} onClick={() => {console.log("back")}} startIcon={<KeyboardBackspaceIcon />}> Back </Button>
+              <Button variant="contained" sx={{backgroundColor: kbd.back.bgc}} onClick={handleBackspace} startIcon={<KeyboardBackspaceIcon />}> Back </Button>
             </Grid>
           </Grid>
         </Grid>

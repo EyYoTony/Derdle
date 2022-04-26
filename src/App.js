@@ -7,22 +7,24 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import Header from './components/header.js'
 import GameRow from './components/gameRow.js'
 import WLDialog from './components/wlDialog.js'
+// https://github.com/tabatkins/wordle-list/blob/main/words now using this wordlist for allowed words
 import allowedWordArr from './components/allowedWordArr.js'
 
 //MAIN TODOS
 //USE UNIX TIMESTAMP TO CHANGE THE WORD EVERYDAY
 //IMPLEMENT MODAL FOR WIN / LOSS (could do a help modal as well)
 //^ add Sharing capabilities
-//----------------DONE - ONLY ALLOW WORDS IN WORDLIST back one directory - DONE-------------
 //add functionality to back and enter onscreen buttons
 //change button typeface to fantasy and increase font size ???? do I even want want this ???
 // last thing - save attempts/state to cookies
+//  easy thing - work on warnings in cmd
 
 export default function App() {
   //snackbar popups
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   //state for toggleing Dialog -> needs to be passed down to component
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
+  const [isWin, setIsWin] = useState(false)
   //using hook to control state of input
   // I am probably doing a bad practice of changing the array instead of creating a new one with setAns at the current moment
   const [ans, setAns] = useState(["", "", "", "", "", ""])
@@ -138,7 +140,6 @@ export default function App() {
       const listener = e => {
         e.preventDefault();
         if(!e.repeat){
-
           if(e.code == "Backspace"){
             ans[counter] = ans[counter].substring(0, ans[counter].length-1)
             setInput(inputState.substring(0, inputState.length-1))
@@ -152,6 +153,8 @@ export default function App() {
               if(allowedWordArr.includes(inputState)){
                 //This is submission - row results are handled in gameRow.js based on counter
                 //handle keyboard state on submit
+                if(inputState == dailyWord)
+                  setIsWin(true)
                 updateKeyboard(inputState, dailyWord)
                 setCounter(counter+1)
                 setInput("")
@@ -162,7 +165,7 @@ export default function App() {
             }
             else {
               //use this as a exmple for custom snackbar popups
-              createSnackbar("word not valid")
+              createSnackbar("open modal")
             }
 
           }
@@ -183,7 +186,7 @@ export default function App() {
   return (
     <div className="main">
       <Header />
-      <WLDialog open={open} setOpen={setOpen} isWin={true} />
+      <WLDialog open={open} setOpen={setOpen} isWin={isWin} />
       <div className="game">
           <GameRow input={ans[0]} isSubmitted={counter > 0} dailyWord={dailyWord}/>
           <GameRow input={ans[1]} isSubmitted={counter > 1} dailyWord={dailyWord}/>

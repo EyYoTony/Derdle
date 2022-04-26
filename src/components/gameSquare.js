@@ -1,8 +1,8 @@
 import { Box, Paper, Typography } from '@mui/material';
 
 const GameSquare = (props) => {
-  const result = props.result || "none"
-  const letter = props.letter || ""
+  const result = props.result ?? "none"
+  const letter = props.letter ?? ""
   //select background color from result page-bg #121212 missing #686868 appears #ef9333 correct #00b520
   const bgc = (result == "none")
     ? "#121212"

@@ -6,20 +6,23 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 //components
 import Header from './components/header.js'
 import GameRow from './components/gameRow.js'
+import WLDialog from './components/wlDialog.js'
+import allowedWordArr from './components/allowedWordArr.js'
 
 //MAIN TODOS
 //USE UNIX TIMESTAMP TO CHANGE THE WORD EVERYDAY
 //IMPLEMENT MODAL FOR WIN / LOSS (could do a help modal as well)
-//MAKE KEYBOARD REFLECT CURRENT PLAYER INPUT INFO (use state)
-//ONLY ALLOW WORDS IN WORDLIST back one directory
-//change button typeface to fantasy and increase font size
+//^ add Sharing capabilities
+//----------------DONE - ONLY ALLOW WORDS IN WORDLIST back one directory - DONE-------------
+//add functionality to back and enter onscreen buttons
+//change button typeface to fantasy and increase font size ???? do I even want want this ???
 // last thing - save attempts/state to cookies
 
 export default function App() {
-
   //snackbar popups
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-
+  //state for toggleing Dialog -> needs to be passed down to component
+  const [open, setOpen] = useState(true)
   //using hook to control state of input
   // I am probably doing a bad practice of changing the array instead of creating a new one with setAns at the current moment
   const [ans, setAns] = useState(["", "", "", "", "", ""])
@@ -81,6 +84,28 @@ export default function App() {
     }
   }
 
+  //main snackbar logic here - now a function
+  var createSnackbar = (message) => {
+    enqueueSnackbar(message, {
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'center',
+      },
+      TransitionComponent: Fade,
+      autoHideDuration: 1250,
+      // thanks for this blog post - https://smartdevpreneur.com/customizing-notistack-with-material-ui-snackbar/
+      sx: {
+        "& .SnackbarContent-root": {
+          color: "white",
+          backgroundColor: "#1F1A24",
+          justifyContent: "center",
+          fontFamily: "fantasy",
+          fontSize: "20px",
+        }
+      }
+    });
+  }
+
   const updateKeyboard = (inWord, dw) =>{
     var updatedObj = kbd
     for(var i=0; i<inWord.length; i++){
@@ -121,53 +146,23 @@ export default function App() {
           else if(e.code == "Enter"){
             if (inputState.length < 5 && counter <= 5){
               console.log(counter)
-              //main snackbar logic here
-              enqueueSnackbar('Word Not Long Enough', {
-                anchorOrigin: {
-                  vertical: 'top',
-                  horizontal: 'center',
-                },
-                TransitionComponent: Fade,
-                autoHideDuration: 1250,
-                // thanks for this blog post - https://smartdevpreneur.com/customizing-notistack-with-material-ui-snackbar/
-                sx: {
-                  "& .SnackbarContent-root": {
-                    color: "white",
-                    backgroundColor: "#1F1A24",
-                    justifyContent: "center",
-                    fontFamily: "fantasy",
-                    fontSize: "20px",
-                  }
-                }
-              });
+              createSnackbar('Word Not Long Enough')
             }
             else if (inputState.length == 5){
-              //This is submission - row results are handled in gameRow.js based on counter
-              //handle keyboard state on submit
-              updateKeyboard(inputState, dailyWord)
-              setCounter(counter+1)
-              setInput("")
+              if(allowedWordArr.includes(inputState)){
+                //This is submission - row results are handled in gameRow.js based on counter
+                //handle keyboard state on submit
+                updateKeyboard(inputState, dailyWord)
+                setCounter(counter+1)
+                setInput("")
+              }
+              else{
+                createSnackbar("That's not a word")
+              }
             }
             else {
               //use this as a exmple for custom snackbar popups
-              enqueueSnackbar('Word Not Valid', {
-                anchorOrigin: {
-                  vertical: 'top',
-                  horizontal: 'center',
-                },
-                TransitionComponent: Fade,
-                autoHideDuration: 1250,
-                // thanks for this blog post - https://smartdevpreneur.com/customizing-notistack-with-material-ui-snackbar/
-                sx: {
-                  "& .SnackbarContent-root": {
-                    color: "white",
-                    backgroundColor: "#1F1A24",
-                    justifyContent: "center",
-                    fontFamily: "fantasy",
-                    fontSize: "20px",
-                  }
-                }
-              });
+              createSnackbar("word not valid")
             }
 
           }
@@ -188,6 +183,7 @@ export default function App() {
   return (
     <div className="main">
       <Header />
+      <WLDialog open={open} setOpen={setOpen} isWin={true} />
       <div className="game">
           <GameRow input={ans[0]} isSubmitted={counter > 0} dailyWord={dailyWord}/>
           <GameRow input={ans[1]} isSubmitted={counter > 1} dailyWord={dailyWord}/>

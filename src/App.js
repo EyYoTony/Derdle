@@ -126,7 +126,7 @@ export default function App() {
         createSnackbar('Word Not Long Enough')
       }
       else if (inputState.length === 5){
-        if(allowedWordArr.includes(inputState)){
+        if(allowedWordArr.includes(inputState.toLowerCase())){
           //This is submission - row results are handled in gameRow.js based on counter
           //handle keyboard state on submit
           if(inputState.toUpperCase() === dailyWord.toUpperCase()){

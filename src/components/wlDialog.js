@@ -1,5 +1,5 @@
 // This is the pop up dialog modal for Win/Loss/Share handleing
-import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, IconButton, Typography } from '@mui/material'
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, IconButton, Typography } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import CloseIcon from '@mui/icons-material/Close'
 import PropTypes from 'prop-types'
@@ -9,7 +9,6 @@ import loseImg from '../resources/UldrenNo.png'
 //TODOS
 // Maybe add my socials to endpage for exposure
 // popup snackbar to confirm copy to clipboard
-// pass modulo days to use here - EZ
 
 //copy pasta from https://mui.com/material-ui/react-dialog/ to add close button to top right corner
 //didn't know you could call 'styled' on a mui compnent / would be better than adding 'sx' property a bunch
@@ -66,7 +65,7 @@ function copyText(entryText){
 const letterCounter = (word, letter) => {
   var counter = 0
   for(var i=0; i<word.length; i++){
-    if(word.charAt(i) == letter)
+    if(word.charAt(i) === letter)
       counter++
   }
   return counter
@@ -75,7 +74,7 @@ const letterCounter = (word, letter) => {
 const countCorrect = (input, dailyWord, letter) => {
   var counter = 0
   for(var i=0; i<dailyWord.length; i++){
-    if(input.charAt(i) == letter && dailyWord.charAt(i) == letter)
+    if(input.charAt(i) === letter && dailyWord.charAt(i) === letter)
       counter++
   }
   return counter
@@ -91,19 +90,19 @@ const makeLetterArr = (inputIn, dailyWordIn) => {
     if(!dailyWord.includes(letterArr[i])){
       resultArr[i] = "missing"
     }
-    else if(letterArr[i] == dailyWord.substring(i, i+1)){
+    else if(letterArr[i] === dailyWord.substring(i, i+1)){
       resultArr[i] = "correct"
     }
     else if(dailyWord.includes(letterArr[i])){
       // base case is if shared letters in guess is < the amount in daily word then is automatically fine to set as "appears"
-      if(letterCounter(input, letterArr[i]) <= letterCounter(dailyWord, letterArr[i]) || letterCounter(input, letterArr[i]) == 1){
+      if(letterCounter(input, letterArr[i]) <= letterCounter(dailyWord, letterArr[i]) || letterCounter(input, letterArr[i]) === 1){
         resultArr[i] = "appears"
       }
       else {
         //FOR LOOP BACKWARDS AND COUNT AGAINST (<=) DAILY WORD COUNT ----- the most confusing part of this code, but seems to work as intended
         var counter = 0
         for(var j=i; j>=0; j--){
-          if(letterArr[j] == letterArr[i])
+          if(letterArr[j] === letterArr[i])
             counter++
         }
         //COOL MATH THAT SEEMS TO WORK
@@ -167,7 +166,7 @@ const WLDialog = (props) => {
         <Typography gutterBottom variant="h4" fontFamily="fantasy">
           {isWin ? "You got the word of the day: " + dailyWord : "The word of the day was: " + dailyWord}
         </Typography>
-        <img style={{maxWidth:'80%', maxHeight:'80%'}} src={isWin ? winImg : loseImg}/>
+        <img style={{maxWidth:'80%', maxHeight:'80%'}} src={isWin ? winImg : loseImg} alt="win loss"/>
       </DialogContent>
       <DialogActions sx={{display: 'flex', justifyContent: "center"}}>
           <Button sx={{backgroundColor: '#1F1A24', color: 'white', fontFamily: 'fantasy', width: '200px', height: '50px', fontSize: "x-large"}} onClick={() => copyText(makeResultStr(counter, answers, dailyWord, isWin, dateIndex))}>

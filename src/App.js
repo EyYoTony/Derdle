@@ -1,7 +1,7 @@
 import './App.css';
 import { useState, useEffect } from 'react'
 import { useSnackbar } from 'notistack'
-import { Fade, Button, Grid, IconButton } from '@mui/material'
+import { Fade, Button, Grid } from '@mui/material'
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 //components
 import Header from './components/header.js'
@@ -11,22 +11,22 @@ import WLDialog from './components/wlDialog.js'
 import allowedWordArr from './components/allowedWordArr.js'
 
 //MAIN TODOS
-//USE UNIX TIMESTAMP TO CHANGE THE WORD EVERYDAY
 //could do a help modal
 //change button typeface to fantasy and increase font size ???? do I even want want this ???
 // last thing - save attempts/state to cookies
-//  easy thing - work on warnings in cmd
+//edge case word changes mid puzzle because user was playing over midnight change
 
 export default function App() {
 
   //get todays current word
+  //happens every time page updates, should be only when mounts
   const currentDate = new Date().getTime()
   const getModDay = (date) => {
     const dateStr = currentDate.toString()
     //you can subtract days to buffer to the wanted start date
-    const dayBuffer = 2
+    const dayBuffer = 4
     //the -14400 is to make the days flip over at midnight EST instead of UTC / one hour is 3600 seconds
-    // use the day %30 to change the ansList position everyday
+    // use the day %30 to change the ansList position everyday / one day is 86400 seconds
     return Math.floor((((parseInt(dateStr.substring(0, dateStr.length-3))-14400)/86400)-dayBuffer)%30)
   }
   const dateIndex = getModDay(currentDate)
@@ -37,13 +37,13 @@ export default function App() {
   const dailyWord = ansList[dateIndex].toUpperCase()
 
   //snackbar popups
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
   //state for toggleing Dialog -> needs to be passed down to component
   const [open, setOpen] = useState(false)
   const [isWin, setIsWin] = useState(false)
   //using hook to control state of input
-  // I am probably doing a bad practice of changing the array instead of creating a new one with setAns at the current moment
-  const [ans, setAns] = useState(["", "", "", "", "", ""])
+  // I am probably doing a bad practice of changing the array instead of creating a new one with setAns at the current moment - would need to refactor a good amount of code to fix this so it is staying for the time being
+  const [ans] = useState(["", "", "", "", "", ""])
   //keyboard state
   const [kbd, setKbd] = useState({
     a: {bgc: "#686868", status: "none"},
@@ -126,11 +126,11 @@ export default function App() {
       if (inputState.length < 5 && counter <= 5){
         createSnackbar('Word Not Long Enough')
       }
-      else if (inputState.length == 5){
+      else if (inputState.length === 5){
         if(allowedWordArr.includes(inputState)){
           //This is submission - row results are handled in gameRow.js based on counter
           //handle keyboard state on submit
-          if(inputState.toUpperCase() == dailyWord.toUpperCase()){
+          if(inputState.toUpperCase() === dailyWord.toUpperCase()){
             setIsWin(true)
             setOpen(true)
           }
@@ -166,19 +166,19 @@ export default function App() {
     for(var i=0; i<inWord.length; i++){
       const myChar = inWord.toLowerCase().charAt(i)
       //don't update keyboard characters unless no status or appears
-      if(kbd[myChar].status == "none"){
+      if(kbd[myChar].status === "none"){
         if(!dw.toLowerCase().includes(myChar)){
           updatedObj = {...updatedObj, [myChar]: {bgc: "#242526", status: "missing"}}
         }
-        else if(dw.toLowerCase().charAt(i) == myChar){
+        else if(dw.toLowerCase().charAt(i) === myChar){
           updatedObj = {...updatedObj, [myChar]: {bgc: "#00b520", status: "correct"}}
         }
         else if(dw.toLowerCase().includes(myChar)){
           updatedObj = {...updatedObj, [myChar]: {bgc: "#ef9333", status: "appears"}}
         }
       }
-      else if(kbd[myChar].status == "appears"){
-        if(dw.toLowerCase().charAt(i) == myChar){
+      else if(kbd[myChar].status === "appears"){
+        if(dw.toLowerCase().charAt(i) === myChar){
           updatedObj = {...updatedObj, [myChar]: {bgc: "#00b520", status: "correct"}}
         }
       }
@@ -193,10 +193,10 @@ export default function App() {
       const listener = e => {
         e.preventDefault();
         if(!e.repeat){
-          if(e.code == "Backspace"){
+          if(e.code === "Backspace"){
             handleBackspace()
           }
-          else if(e.code == "Enter"){
+          else if(e.code === "Enter"){
             if(!isWin){
               handleEnter()
             }

@@ -2,10 +2,10 @@ import { AppBar, Typography } from '@mui/material';
 import GameSquare from './gameSquare.js'
 
 const GameRow = (props) => {
-  var input = (props.input == undefined) ? "" : props.input.toUpperCase() || ""
-  const submitted = props.isSubmitted || false
+  var input = (props.input == undefined) ? "" : props.input.toUpperCase() ?? ""
+  const submitted = props.isSubmitted ?? false
   const letterArr = input.split("")
-  const dailyWord = props.dailyWord || "CABAL"
+  const dailyWord = props.dailyWord ?? "CABAL"
   // This is to avoid errors if input is shorter than letters
   for (let i=letterArr.length; i<5; i++)
     letterArr.push("")

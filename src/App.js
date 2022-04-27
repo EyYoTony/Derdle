@@ -12,13 +12,30 @@ import allowedWordArr from './components/allowedWordArr.js'
 
 //MAIN TODOS
 //USE UNIX TIMESTAMP TO CHANGE THE WORD EVERYDAY
-//IMPLEMENT MODAL FOR WIN / LOSS (could do a help modal as well)
-//^ add Sharing capabilities
+//could do a help modal
 //change button typeface to fantasy and increase font size ???? do I even want want this ???
 // last thing - save attempts/state to cookies
 //  easy thing - work on warnings in cmd
 
 export default function App() {
+
+  //get todays current word
+  const currentDate = new Date().getTime()
+  const getModDay = (date) => {
+    const dateStr = currentDate.toString()
+    //you can subtract days to buffer to the wanted start date
+    const dayBuffer = 2
+    //the -14400 is to make the days flip over at midnight EST instead of UTC / one hour is 3600 seconds
+    // use the day %30 to change the ansList position everyday
+    return Math.floor((((parseInt(dateStr.substring(0, dateStr.length-3))-14400)/86400)-dayBuffer)%30)
+  }
+  const dateIndex = getModDay(currentDate)
+  console.log("current UTS: " + dateIndex)
+
+  //Make This change by time
+  const ansList = ['glint', 'class', 'cabal', 'taken', 'power', 'salvo', 'petra', 'arath', 'saint', 'ghost', 'crypt', 'space', 'tower', 'shank', 'botza', 'ketch', 'crow', 'light', 'witch', 'earth', 'trust', 'crota', 'ikora', 'queen', 'armor', 'truth', 'quria', 'malok', 'sword', 'calus']
+  const dailyWord = ansList[dateIndex].toUpperCase()
+
   //snackbar popups
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   //state for toggleing Dialog -> needs to be passed down to component
@@ -65,10 +82,7 @@ export default function App() {
   //counter to know what line to edit
   const [counter, setCounter] = useState(0)
 
-  //get todays current word
-  //const currentDate = new Date().getTime()
-  //console.log(currentDate)
-
+  // EXAMPLE UPDATE AN OBJECT HOOK THROUGH A SETTER
   // setKbd({
   //   ...kbd,
   //   q: {bgc: "#ef9333", status: "none"}
@@ -76,8 +90,6 @@ export default function App() {
 
   //ALLOWED KEYS FOR INPUT - A-Z lower and uppercasse
   const ALLOWED_KEYS = ['a', 'A', 'b', 'B', 'c', 'C', 'd', 'D', 'e', 'E', 'f', 'F', 'g', 'G', 'h', 'H', 'i', 'I', 'j', 'J', 'k', 'K', 'l', 'L', 'm', 'M', 'n', 'N', 'o', 'O', 'p', 'P', 'q', 'Q', 'r', 'R', 's', 'S', 't', 'T', 'u', 'U', 'v', 'V', 'w', 'W', 'x', 'X', 'y', 'Y', 'z', 'Z']
-  //Make This change by time
-  const dailyWord = "GHOST"
 
   var addLettter = (letter) => {
     if(inputState.length < 5 && !isWin){
@@ -212,7 +224,7 @@ export default function App() {
   return (
     <div className="main">
       <Header />
-      <WLDialog open={open} setOpen={setOpen} isWin={isWin} answers={ans} counter={counter}/>
+      <WLDialog open={open} setOpen={setOpen} isWin={isWin} answers={ans} counter={counter} dailyWord={dailyWord} dateIndex={dateIndex}/>
       <div className="game">
           <GameRow input={ans[0]} isSubmitted={counter > 0} dailyWord={dailyWord}/>
           <GameRow input={ans[1]} isSubmitted={counter > 1} dailyWord={dailyWord}/>

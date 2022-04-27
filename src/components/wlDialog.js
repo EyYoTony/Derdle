@@ -8,6 +8,8 @@ import loseImg from '../resources/UldrenNo.png'
 
 //TODOS
 // Maybe add my socials to endpage for exposure
+// popup snackbar to confirm copy to clipboard
+// pass modulo days to use here - EZ
 
 //copy pasta from https://mui.com/material-ui/react-dialog/ to add close button to top right corner
 //didn't know you could call 'styled' on a mui compnent / would be better than adding 'sx' property a bunch
@@ -132,8 +134,8 @@ const arrToEmoji = (arr) => {
 }
 
 //return result as string
-const makeResultStr = (counter, answers, dailyWord, isWin) => {
-  var outStr = 'Derdle 01 ' + (isWin ? counter : "X") + '/6 \n\n'
+const makeResultStr = (counter, answers, dailyWord, isWin, dateIndex) => {
+  var outStr = 'Derdle ' +(dateIndex+1)+ ' ' + (isWin ? counter : "X") + '/6 \n\n'
   //loop through answers to make the rows and add emojis to outStr
   for(var i=0; i<counter; i++){
     outStr += arrToEmoji(makeLetterArr(answers[i], dailyWord))
@@ -149,7 +151,8 @@ const WLDialog = (props) => {
   //TODO copy posta logic from ROW to copy results to clipboard
   const answers = props.answers ?? []
   const counter = props.counter ?? 0
-  const dailyWord = "ghost".toUpperCase()
+  const dailyWord = props.dailyWord ?? "CABAL"
+  const dateIndex = props.dateIndex ?? 0
 
   return(
     <BootstrapDialog
@@ -167,7 +170,7 @@ const WLDialog = (props) => {
         <img style={{maxWidth:'80%', maxHeight:'80%'}} src={isWin ? winImg : loseImg}/>
       </DialogContent>
       <DialogActions sx={{display: 'flex', justifyContent: "center"}}>
-          <Button sx={{backgroundColor: '#1F1A24', color: 'white', fontFamily: 'fantasy', width: '200px', height: '50px', fontSize: "x-large"}} onClick={() => copyText(makeResultStr(counter, answers, dailyWord, isWin))}>
+          <Button sx={{backgroundColor: '#1F1A24', color: 'white', fontFamily: 'fantasy', width: '200px', height: '50px', fontSize: "x-large"}} onClick={() => copyText(makeResultStr(counter, answers, dailyWord, isWin, dateIndex))}>
             Share Results
           </Button>
       </DialogActions>

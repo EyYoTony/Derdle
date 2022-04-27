@@ -14,7 +14,6 @@ import allowedWordArr from './components/allowedWordArr.js'
 //USE UNIX TIMESTAMP TO CHANGE THE WORD EVERYDAY
 //IMPLEMENT MODAL FOR WIN / LOSS (could do a help modal as well)
 //^ add Sharing capabilities
-//add functionality to back and enter onscreen buttons
 //change button typeface to fantasy and increase font size ???? do I even want want this ???
 // last thing - save attempts/state to cookies
 //  easy thing - work on warnings in cmd
@@ -77,6 +76,7 @@ export default function App() {
 
   //ALLOWED KEYS FOR INPUT - A-Z lower and uppercasse
   const ALLOWED_KEYS = ['a', 'A', 'b', 'B', 'c', 'C', 'd', 'D', 'e', 'E', 'f', 'F', 'g', 'G', 'h', 'H', 'i', 'I', 'j', 'J', 'k', 'K', 'l', 'L', 'm', 'M', 'n', 'N', 'o', 'O', 'p', 'P', 'q', 'Q', 'r', 'R', 's', 'S', 't', 'T', 'u', 'U', 'v', 'V', 'w', 'W', 'x', 'X', 'y', 'Y', 'z', 'Z']
+  //Make This change by time
   const dailyWord = "GHOST"
 
   var addLettter = (letter) => {
@@ -110,26 +110,29 @@ export default function App() {
 
   //Logic for handling enter press - can open snackbar and dialog modals
   var handleEnter = () => {
-    if (inputState.length < 5 && counter <= 5){
-      createSnackbar('Word Not Long Enough')
-    }
-    else if (inputState.length == 5){
-      if(allowedWordArr.includes(inputState)){
-        //This is submission - row results are handled in gameRow.js based on counter
-        //handle keyboard state on submit
-        if(inputState.toUpperCase() == dailyWord.toUpperCase()){
-          setIsWin(true)
-        }
-        updateKeyboard(inputState, dailyWord)
-        setCounter(counter+1)
-        setInput("")
+    if(!isWin){
+      if (inputState.length < 5 && counter <= 5){
+        createSnackbar('Word Not Long Enough')
       }
-      else{
-        createSnackbar("That's not a word")
+      else if (inputState.length == 5){
+        if(allowedWordArr.includes(inputState)){
+          //This is submission - row results are handled in gameRow.js based on counter
+          //handle keyboard state on submit
+          if(inputState.toUpperCase() == dailyWord.toUpperCase()){
+            setIsWin(true)
+          }
+          updateKeyboard(inputState, dailyWord)
+          setCounter(counter+1)
+          setInput("")
+        }
+        else{
+          createSnackbar("That's not a word")
+        }
       }
     }
     else {
-      createSnackbar("open modal")
+      //this should be the loss dialog modal
+      setOpen(true)
     }
   }
 
@@ -179,7 +182,9 @@ export default function App() {
               handleEnter()
             }
             else {
-              createSnackbar("open modal")
+              //if enter is pressed during a win state
+              //this opens the end dialog modal
+              setOpen(true)
             }
 
           }
@@ -200,7 +205,7 @@ export default function App() {
   return (
     <div className="main">
       <Header />
-      <WLDialog open={open} setOpen={setOpen} isWin={isWin} />
+      <WLDialog open={open} setOpen={setOpen} isWin={isWin} answers={ans} />
       <div className="game">
           <GameRow input={ans[0]} isSubmitted={counter > 0} dailyWord={dailyWord}/>
           <GameRow input={ans[1]} isSubmitted={counter > 1} dailyWord={dailyWord}/>

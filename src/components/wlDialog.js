@@ -22,7 +22,7 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   },
   '& .MuiDialog-paper': {
     color:'white',
-    background:'#242526'
+    background:'#242526',
   },
 }))
 
@@ -156,6 +156,8 @@ const WLDialog = (props) => {
   return(
     <BootstrapDialog
       open={open}
+      //fixes problem on mobile of expanding page on rsults, but also creates probelems on desktop. gonna focus on desktop over mobile
+      //sx={{width: "678px"}}
       onClose={() => setOpen(false)}
       aria-labelledby="customized-dialog-title"
     >
@@ -166,7 +168,7 @@ const WLDialog = (props) => {
         <Typography gutterBottom variant="h4" fontFamily="fantasy">
           {isWin ? "You got the word of the day: " + dailyWord : "The word of the day was: " + dailyWord}
         </Typography>
-        <img style={{maxWidth:'80%', maxHeight:'80%'}} src={isWin ? winImg : loseImg} alt="win loss"/>
+        <img style={{maxWidth:'70%', maxHeight:'70%'}} src={isWin ? winImg : loseImg} alt="win loss"/>
       </DialogContent>
       <DialogActions sx={{display: 'flex', justifyContent: "center"}}>
           <Button sx={{backgroundColor: '#1F1A24', color: 'white', fontFamily: 'fantasy', width: '200px', height: '50px', fontSize: "x-large"}} onClick={() => copyText(makeResultStr(counter, answers, dailyWord, isWin, dateIndex))}>

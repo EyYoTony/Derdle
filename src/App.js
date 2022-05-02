@@ -11,10 +11,14 @@ import WLDialog from './components/wlDialog.js'
 import allowedWordArr from './components/allowedWordArr.js'
 
 //MAIN TODOS
-//could do a help modal
+//could do a help modal - explain game and reset time
 //change button typeface to fantasy and increase font size ???? do I even want want this ???
-// last thing - save attempts/state to cookies
+//last thing - save attempts/state to cookies -> just compare current date to saved date and load cookies if same
 //edge case word changes mid puzzle because user was playing over midnight change
+
+// Mobile Todos
+// Keyboard keys are small on mobile
+// MAJOR - dialog modal not properly centered on mobile
 
 export default function App() {
 
@@ -32,7 +36,7 @@ export default function App() {
   const dateIndex = getModDay(currentDate)
 
   //Make This change by time
-  const ansList = ['tower', 'glint', 'class', 'cabal', 'taken', 'power', 'salvo', 'petra', 'arath', 'saint', 'ghost', 'crypt', 'space', 'shank', 'botza', 'ketch', 'crow', 'light', 'witch', 'earth', 'trust', 'crota', 'ikora', 'queen', 'armor', 'truth', 'quria', 'malok', 'sword', 'calus']
+  const ansList = ['petra', 'glint', 'class', 'saint', 'taken', 'power', 'salvo', 'tower', 'arath', 'cabal', 'ghost', 'crypt', 'space', 'shank', 'botza', 'ketch', 'crow', 'light', 'witch', 'earth', 'trust', 'crota', 'ikora', 'queen', 'armor', 'truth', 'quria', 'malok', 'sword', 'calus']
   const dailyWord = ansList[dateIndex].toUpperCase()
 
   //snackbar popups
@@ -188,6 +192,8 @@ export default function App() {
 
   //handle keypress
   useEffect(() => {
+      //use here as an old componentDidMount/componentDidUpdate to check/save cookies
+
 
       const listener = e => {
         e.preventDefault();

@@ -152,6 +152,7 @@ const WLDialog = (props) => {
   const counter = props.counter ?? 0
   const dailyWord = props.dailyWord ?? "CABAL"
   const dateIndex = props.dateIndex ?? 0
+  const createSnackbar = props.createSnackbar
 
   return(
     <BootstrapDialog
@@ -171,7 +172,10 @@ const WLDialog = (props) => {
         <img style={{maxWidth:'70%', maxHeight:'70%'}} src={isWin ? winImg : loseImg} alt="win loss"/>
       </DialogContent>
       <DialogActions sx={{display: 'flex', justifyContent: "center"}}>
-          <Button sx={{backgroundColor: '#1F1A24', color: 'white', fontFamily: 'fantasy', width: '200px', height: '50px', fontSize: "x-large"}} onClick={() => copyText(makeResultStr(counter, answers, dailyWord, isWin, dateIndex))}>
+          <Button sx={{backgroundColor: '#1F1A24', color: 'white', fontFamily: 'fantasy', width: '200px', height: '50px', fontSize: "x-large"}} onClick={() => {
+            copyText(makeResultStr(counter, answers, dailyWord, isWin, dateIndex))
+            createSnackbar("Copied to Clipboard")
+          }}>
             Share Results
           </Button>
       </DialogActions>

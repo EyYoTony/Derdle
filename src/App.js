@@ -359,7 +359,7 @@ export default function App() {
   return (
     <div className="main">
       <Header />
-      <WLDialog open={open} setOpen={setOpen} isWin={isWin} answers={ans} counter={counter} dailyWord={dailyWord} dateIndex={dateIndex}/>
+      <WLDialog open={open} setOpen={setOpen} isWin={isWin} answers={ans} counter={counter} dailyWord={dailyWord} dateIndex={dateIndex} createSnackbar={createSnackbar}/>
       <div className="game">
           <GameRow input={ans[0]} isSubmitted={counter > 0} dailyWord={dailyWord}/>
           <GameRow input={ans[1]} isSubmitted={counter > 1} dailyWord={dailyWord}/>

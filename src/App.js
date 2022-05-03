@@ -13,11 +13,9 @@ import allowedWordArr from './components/allowedWordArr.js'
 //MAIN TODOS
 //could do a help modal - explain game and reset time
 //change button typeface to fantasy and increase font size ???? do I even want want this ???
-//last thing - save attempts/state to cookies -> just compare current date to saved date and load cookies if same
-//edge case word changes mid puzzle because user was playing over midnight change
 
 // Mobile Todos
-// Keyboard keys are small on mobile
+// Keyboard keys are small on mobile / keeps buttons pressed
 // MAJOR - dialog modal not properly centered on mobile
 
 export default function App() {
@@ -36,7 +34,7 @@ export default function App() {
   const dateIndex = getModDay(currentDate)
 
   //Make This change by time
-  const ansList = ['petra', 'glint', 'class', 'saint', 'taken', 'power', 'salvo', 'tower', 'arath', 'cabal', 'ghost', 'crypt', 'space', 'shank', 'botza', 'ketch', 'crow', 'light', 'witch', 'earth', 'trust', 'crota', 'ikora', 'queen', 'armor', 'truth', 'quria', 'malok', 'sword', 'calus']
+  const ansList = ['petra', 'glint', 'class', 'saint', 'taken', 'power', 'salvo', 'tower', 'arath', 'cabal', 'ghost', 'crypt', 'titan', 'shank', 'botza', 'ketch', 'crow', 'light', 'witch', 'earth', 'trust', 'crota', 'ikora', 'queen', 'armor', 'truth', 'quria', 'malok', 'sword', 'calus']
   const dailyWord = ansList[dateIndex].toUpperCase()
 
   //snackbar popups
@@ -46,7 +44,7 @@ export default function App() {
   const [isWin, setIsWin] = useState(false)
   //using hook to control state of input
   // I am probably doing a bad practice of changing the array instead of creating a new one with setAns at the current moment - would need to refactor a good amount of code to fix this so it is staying for the time being
-  const [ans] = useState(["", "", "", "", "", ""])
+  const [ans, setAns] = useState(["", "", "", "", "", ""])
   //keyboard state
   const [kbd, setKbd] = useState({
     a: {bgc: "#686868", status: "none"},
@@ -133,6 +131,7 @@ export default function App() {
         if(allowedWordArr.includes(inputState.toLowerCase())){
           //This is submission - row results are handled in gameRow.js based on counter
           //handle keyboard state on submit
+          updateCookies()
           if(inputState.toUpperCase() === dailyWord.toUpperCase()){
             setIsWin(true)
             setOpen(true)
@@ -190,10 +189,141 @@ export default function App() {
     setKbd(updatedObj)
   }
 
+  //cookie implementation here -> will use previous states
+  //needs dateIndex, isWin, ans, ----kbd----, counter?
+  //kdb can be updated from ans data so dont need as cookie // counter/isWin can be found from ans as well might be easier to store
+  //update cookie whenever useEffect is triggered
+  //import cookie data when dateIndex of page is same as cookie onPageLoad, if the dateIndex != page/cookie then set cookie null (edge case user returns after 30 days to same puzzle)
+  //we doing manual cookies for now but a library would probably be better in the long run
+  //used to maybe load state from cookies on page load
+  const [isLoaded, setIsLoaded] = useState(false)
+  //cookie parser - from this article https://medium.com/swlh/react-hooks-usecookie-hook-26ac06ff36b0
+  const getItem = key =>
+    document.cookie.split("; ").reduce((total, currentCookie) => {
+       const item = currentCookie.split("=");
+       const storedKey = item[0];
+       const storedValue = item[1];
+       return key === storedKey
+         ? decodeURIComponent(storedValue)
+         : total;
+    }, '');
+
+  //will only update cookies on sucessful handleEnter()
+  const updateCookies = () => {
+    var midnight = new Date();
+    //this might be local midnight and not EST midnight which is different from the Unix Time Stamp I am using
+    midnight.setHours(23,59,59,0);
+    //document.cookie = 'name=hellcookies2; dateIndex='+dateIndex +'; expires='+ midnight.toUTCString()+';'
+    document.cookie = 'dateIndex='+dateIndex+'; expires='+ midnight.toUTCString()+';'
+    //changing the ans array to a obj because it is easier to pasrse json from a string, using an array was a bad design decision
+    document.cookie = 'ans='+JSON.stringify({0: ans[0], 1: ans[1], 2: ans[2], 3: ans[3] ,4: ans[4], 5: ans[5]})+'; expires='+ midnight.toUTCString()+';'
+  }
+
+  //This should only happen on page load and needs to be loaded as stated above
+  const updateStateFromCookies = () => {
+    // const myKbd = getItem('kbd')
+    // if(myKbd !== undefined){
+    //   setKbd(JSON.parse(myKbd))
+    // }
+    const cookieIndex = parseInt(getItem('dateIndex'))
+    //if the main cookie exists
+    if(!isNaN(cookieIndex)){
+      if(cookieIndex === dateIndex){
+        //UPDATE STATE FROM COOKIES HERE
+        const ansObj = JSON.parse(getItem('ans'))
+        //do logic on ans to find counter, isWin, and kbd
+        const updatedArr = ["", "", "", "", "", ""]
+        var updatedCounter = 0
+        var updatedIsWin = false
+        var updatedKeyboard = {
+          a: {bgc: "#686868", status: "none"},
+          b: {bgc: "#686868", status: "none"},
+          c: {bgc: "#686868", status: "none"},
+          d: {bgc: "#686868", status: "none"},
+          e: {bgc: "#686868", status: "none"},
+          f: {bgc: "#686868", status: "none"},
+          g: {bgc: "#686868", status: "none"},
+          h: {bgc: "#686868", status: "none"},
+          i: {bgc: "#686868", status: "none"},
+          j: {bgc: "#686868", status: "none"},
+          k: {bgc: "#686868", status: "none"},
+          l: {bgc: "#686868", status: "none"},
+          m: {bgc: "#686868", status: "none"},
+          n: {bgc: "#686868", status: "none"},
+          o: {bgc: "#686868", status: "none"},
+          p: {bgc: "#686868", status: "none"},
+          q: {bgc: "#686868", status: "none"},
+          r: {bgc: "#686868", status: "none"},
+          s: {bgc: "#686868", status: "none"},
+          t: {bgc: "#686868", status: "none"},
+          u: {bgc: "#686868", status: "none"},
+          v: {bgc: "#686868", status: "none"},
+          w: {bgc: "#686868", status: "none"},
+          x: {bgc: "#686868", status: "none"},
+          y: {bgc: "#686868", status: "none"},
+          z: {bgc: "#686868", status: "none"},
+          enter: {bgc: "#686868", status: "none"},
+          back: {bgc: "#686868", status: "none"},
+        }
+        for(var i=0; i<6; i++){
+          //short the loop
+          if(ansObj[i] === ""){
+            i=6
+          }
+          else{
+            updatedArr[i] = ansObj[i]
+            updatedCounter++
+          }
+        }
+        if(updatedArr[updatedCounter-1].toLowerCase() === dailyWord.toLowerCase())
+          updatedIsWin = true
+        setAns(updatedArr)
+        setCounter(updatedCounter)
+        setIsWin(updatedIsWin)
+        //update kbd
+        for(var j=0; j<updatedCounter; j++){
+          console.log(updatedArr[j])
+          //from updatekbd
+          for(var i=0; i<updatedArr[j].length; i++){
+            const myChar = updatedArr[j].toLowerCase().charAt(i)
+            //don't update keyboard characters unless no status or appears
+            if(kbd[myChar].status === "none"){
+              if(!dailyWord.toLowerCase().includes(myChar)){
+                updatedKeyboard = {...updatedKeyboard, [myChar]: {bgc: "#242526", status: "missing"}}
+              }
+              else if(dailyWord.toLowerCase().charAt(i) === myChar){
+                updatedKeyboard = {...updatedKeyboard, [myChar]: {bgc: "#00b520", status: "correct"}}
+              }
+              else if(dailyWord.toLowerCase().includes(myChar)){
+                updatedKeyboard = {...updatedKeyboard, [myChar]: {bgc: "#ef9333", status: "appears"}}
+              }
+            }
+            else if(kbd[myChar].status === "appears"){
+              if(dailyWord.toLowerCase().charAt(i) === myChar){
+                updatedKeyboard = {...updatedKeyboard, [myChar]: {bgc: "#00b520", status: "correct"}}
+              }
+            }
+          }
+
+        }
+        console.log(updatedKeyboard)
+        setKbd(updatedKeyboard)
+      }
+      else{
+        //DELETE ALL CURRENT COOKIES
+
+      }
+    }
+  }
+
+
   //handle keypress
   useEffect(() => {
-      //use here as an old componentDidMount/componentDidUpdate to check/save cookies
-
+      //an old componentDidMount by using hook
+      if(!isLoaded){
+        setIsLoaded(true)
+        updateStateFromCookies()
+      }
 
       const listener = e => {
         e.preventDefault();

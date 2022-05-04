@@ -7,12 +7,13 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import Header from './components/header.js'
 import GameRow from './components/gameRow.js'
 import WLDialog from './components/wlDialog.js'
-// https://github.com/tabatkins/wordle-list/blob/main/words now using this wordlist for allowed words
+// https://github.com/tabatkins/wordle-list/blob/main/words <- old wordlist for allowed words was missing some words that were common
+// now useing this wordlist https://www.bestwordlist.com/5letterwords.htm
 import allowedWordArr from './components/allowedWordArr.js'
 
 //MAIN TODOS
-//could do a help modal - explain game and reset time
-//change button typeface to fantasy and increase font size ???? do I even want want this ???
+//could do a help modal - explain game and reset time - low prio
+//MAKE SURE reset time and cookie time are the same
 
 // Mobile Todos
 // Keyboard keys are small on mobile / keeps buttons pressed
@@ -114,7 +115,8 @@ export default function App() {
           color: "white",
           backgroundColor: "#1F1A24",
           justifyContent: "center",
-          fontFamily: "fantasy",
+          fontFamily: "arial",
+          fontWeight: "bold",
           fontSize: "20px",
         }
       }
@@ -282,7 +284,6 @@ export default function App() {
         setIsWin(updatedIsWin)
         //update kbd
         for(var j=0; j<updatedCounter; j++){
-          console.log(updatedArr[j])
           //from updatekbd
           for(var i=0; i<updatedArr[j].length; i++){
             const myChar = updatedArr[j].toLowerCase().charAt(i)
@@ -306,7 +307,6 @@ export default function App() {
           }
 
         }
-        console.log(updatedKeyboard)
         setKbd(updatedKeyboard)
       }
       else{
@@ -328,6 +328,7 @@ export default function App() {
       const listener = e => {
         e.preventDefault();
         if(!e.repeat){
+          //console.log(currentDate.toUTCString())
           if(e.code === "Backspace"){
             handleBackspace()
           }

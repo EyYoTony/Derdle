@@ -162,17 +162,17 @@ const WLDialog = (props) => {
       onClose={() => setOpen(false)}
       aria-labelledby="customized-dialog-title"
     >
-      <BootstrapDialogTitle id="customized-dialog-title" onClose={() => setOpen(false)}>
+      <BootstrapDialogTitle id="customized-dialog-title" onClose={() => setOpen(false)} fontFamily="arial" fontWeight="bold">
         {isWin ? "Congrats Guardian!" : "Better Luck Tomorrow..."}
       </BootstrapDialogTitle>
       <DialogContent dividers sx={{display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems:'center'}}>
-        <Typography gutterBottom variant="h4" fontFamily="fantasy">
+        <Typography gutterBottom fontSize="xx-large" fontFamily="arial" fontWeight="bold">
           {isWin ? "You got the word of the day: " + dailyWord : "The word of the day was: " + dailyWord}
         </Typography>
         <img style={{maxWidth:'70%', maxHeight:'70%'}} src={isWin ? winImg : loseImg} alt="win loss"/>
       </DialogContent>
       <DialogActions sx={{display: 'flex', justifyContent: "center"}}>
-          <Button sx={{backgroundColor: '#1F1A24', color: 'white', fontFamily: 'fantasy', width: '200px', height: '50px', fontSize: "x-large"}} onClick={() => {
+          <Button sx={{backgroundColor: '#1F1A24', color: 'white', fontFamily: 'arial', fontWeight: "bold", width: '200px', height: '50px', fontSize: "large"}} onClick={() => {
             copyText(makeResultStr(counter, answers, dailyWord, isWin, dateIndex))
             createSnackbar("Copied to Clipboard")
           }}>

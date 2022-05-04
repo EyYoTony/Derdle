@@ -22,7 +22,7 @@ const GameSquare = (props) => {
         margin: '5px',
         borderColor: "white",
       }}>
-      <Typography color="white" variant="h3" align="center" padding="5px" sx={{ flexGrow: 1 }} fontFamily="fantasy">
+      <Typography color="white" variant="h3" align="center" padding="5px" sx={{ flexGrow: 1 }} fontFamily="arial" fontWeight="bold">
         {letter}
       </Typography>
     </Box>

@@ -13,6 +13,7 @@ import allowedWordArr from './components/allowedWordArr.js'
 
 //MAIN TODOS
 //could do a help modal - explain game and reset time - low prio
+//actually delete cookies in the commented section - low prio
 
 // Mobile Todos
 // Keyboard keys are small on mobile / keeps buttons pressed
@@ -26,7 +27,7 @@ export default function App() {
   const getModDay = (date) => {
     const dateStr = currentDate.toString()
     //you can subtract days to buffer to the wanted start date
-    const dayBuffer = 6
+    const dayBuffer = 5
     //the -14400 is to make the days flip over at midnight EST instead of UTC / one hour is 3600 seconds
     // use the day %30 to change the ansList position everyday / one day is 86400 seconds
     return Math.floor((((parseInt(dateStr.substring(0, dateStr.length-3))-14400)/86400)-dayBuffer)%30)
@@ -214,8 +215,9 @@ export default function App() {
     //var midnight = new Date();
     //this might be local midnight and not EST midnight which is different from the Unix Time Stamp I am using
     //midnight.setHours(23,59,59,0);
-    const hoursRemain = (86400000-((currentDate-14400000)%86400000))
-    const expireDate = new Date(currentDate-14400000+hoursRemain)
+    //const hoursRemain = (86400000-((currentDate-14400000)%86400000))
+    //const expireDate = new Date(currentDate+hoursRemain)
+    const expireDate = new Date(currentDate+2073600000)
     //document.cookie = 'name=hellcookies2; dateIndex='+dateIndex +'; expires='+ midnight.toUTCString()+';'
     document.cookie = 'dateIndex='+dateIndex+'; expires='+ expireDate.toUTCString()+';'
     //changing the ans array to a obj because it is easier to pasrse json from a string, using an array was a bad design decision
@@ -329,8 +331,6 @@ export default function App() {
       const listener = e => {
         e.preventDefault();
         if(!e.repeat){
-          //const hoursRemain = 86400000-((currentDate-14400000)%86400000)
-          //console.log(new Date(currentDate-14400000+hoursRemain).toUTCString())
           if(e.code === "Backspace"){
             handleBackspace()
           }

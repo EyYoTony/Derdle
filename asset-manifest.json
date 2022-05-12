@@ -1,17 +1,17 @@
 {
   "files": {
     "main.css": "/Derdle/static/css/main.e46aee4e.css",
-    "main.js": "/Derdle/static/js/main.3251f6c5.js",
+    "main.js": "/Derdle/static/js/main.11a800a5.js",
     "static/js/787.abc8498f.chunk.js": "/Derdle/static/js/787.abc8498f.chunk.js",
     "static/media/UldrenNo.png": "/Derdle/static/media/UldrenNo.97acacd1abad8e73fba4.png",
     "static/media/CaydeThumbsUp.png": "/Derdle/static/media/CaydeThumbsUp.6f4a468a31ddbc364d57.png",
     "index.html": "/Derdle/index.html",
     "main.e46aee4e.css.map": "/Derdle/static/css/main.e46aee4e.css.map",
-    "main.3251f6c5.js.map": "/Derdle/static/js/main.3251f6c5.js.map",
+    "main.11a800a5.js.map": "/Derdle/static/js/main.11a800a5.js.map",
     "787.abc8498f.chunk.js.map": "/Derdle/static/js/787.abc8498f.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e46aee4e.css",
-    "static/js/main.3251f6c5.js"
+    "static/js/main.11a800a5.js"
   ]
 }

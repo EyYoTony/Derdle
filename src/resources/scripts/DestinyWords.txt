@@ -1,1 +1,1 @@
-glint, class, cabal, taken, power, salvo, petra, arath, saint, ghost, crypt, space, tower, shank, botza, ketch, crow, light, witch, earth, trust, crota, ikora, queen, armor, truth, quria, malok, sword, calus
+glint, class, cabal, taken, power, salvo, petra, arath, saint, ghost, crypt, space, tower, shank, botza, ketch, light, witch, earth, trust, crota, ikora, queen, armor, truth, quria, malok, sword, calus

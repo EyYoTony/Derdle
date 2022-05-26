@@ -34,7 +34,7 @@ export default function App() {
   const dateIndex = getModDay(currentDate)
 
   //Make This change by time
-  const ansList = ['petra', 'glint', 'class', 'saint', 'taken', 'power', 'salvo', 'tower', 'arath', 'cabal', 'ghost', 'crypt', 'titan', 'shank', 'botza', 'ketch', 'crow', 'light', 'witch', 'earth', 'trust', 'crota', 'ikora', 'queen', 'armor', 'truth', 'quria', 'malok', 'sword', 'calus']
+  const ansList = ['petra', 'glint', 'class', 'saint', 'taken', 'power', 'salvo', 'tower', 'arath', 'cabal', 'ghost', 'crypt', 'titan', 'shank', 'botza', 'ketch', 'light', 'witch', 'earth', 'trust', 'crota', 'ikora', 'queen', 'armor', 'truth', 'quria', 'malok', 'sword', 'calus']
   const dailyWord = ansList[dateIndex].toUpperCase()
 
   //snackbar popups

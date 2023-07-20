@@ -27,7 +27,7 @@ export default function App() {
   const getModDay = (date) => {
     const dateStr = currentDate.toString()
     //you can subtract days to buffer to the wanted start date
-    const dayBuffer = 5
+    const dayBuffer = 12
     //the -14400 is to make the days flip over at midnight EST instead of UTC / one hour is 3600 seconds
     // use the day %30 to change the ansList position everyday / one day is 86400 seconds
     return Math.floor((((parseInt(dateStr.substring(0, dateStr.length-3))-14400)/86400)-dayBuffer)%30)
@@ -35,7 +35,7 @@ export default function App() {
   const dateIndex = getModDay(currentDate)
 
   //Make This change by time
-  const ansList = ['petra', 'glint', 'class', 'saint', 'taken', 'power', 'salvo', 'tower', 'arath', 'cabal', 'ghost', 'crypt', 'titan', 'shank', 'botza', 'ketch', 'crow', 'light', 'witch', 'earth', 'trust', 'crota', 'ikora', 'queen', 'armor', 'truth', 'quria', 'malok', 'sword', 'calus']
+  const ansList = ['petra', 'glint', 'class', 'saint', 'taken', 'power', 'salvo', 'tower', 'arath', 'cabal', 'ghost', 'crypt', 'titan', 'shank', 'botza', 'ketch', 'crown', 'light', 'witch', 'earth', 'trust', 'crota', 'ikora', 'queen', 'armor', 'truth', 'quria', 'malok', 'sword', 'calus']
   const dailyWord = ansList[dateIndex].toUpperCase()
 
   //snackbar popups
